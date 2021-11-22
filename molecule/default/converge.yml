@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include certbot_dns"
+      include_role:
+        name: "certbot_dns"

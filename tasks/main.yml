@@ -1,0 +1,25 @@
+---
+#- import_tasks: include-vars.yml
+
+#- import_tasks: setup-RedHat.yml
+#  when: ansible_os_family == 'RedHat'
+
+- import_tasks: dns-plugin-install.yml
+  when: certbot_dns_plugin is defined
+
+- import_tasks: prepare-certbot-for-dns.yml
+  when: certbot_dns_plugin is defined
+
+- include_tasks: delete-cert.yml
+  with_items: "{{ certbot_certs }}"
+  when:
+    - certbot_delete_certificate|bool
+  loop_control:
+    loop_var: cert_item
+
+- name: Certbot Create Certificates.
+  import_role:
+    name: geerlingguy.certbot
+  when:
+    - certbot_create_if_missing
+    - not certbot_delete_certificate

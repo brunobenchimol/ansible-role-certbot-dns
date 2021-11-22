@@ -1,0 +1,27 @@
+---
+- name: Package - Install DNS Plugin - {{ certbot_dns_plugin }}.
+  package:
+    name: "python3-certbot-dns-{{ certbot_dns_plugin }}"
+    state: present
+  when: certbot_install_method == 'package'
+
+- name: Snap - Make sure certbot Trust Plugins With Root is set.
+  command: snap set certbot trust-plugin-with-root=ok
+  when: certbot_install_method == 'snap'
+
+- name: Snap - Install DNS Plugin - {{ certbot_dns_plugin }}.
+  snap:
+    name: "certbot-dns-{{ certbot_dns_plugin }}"
+    classic: true
+  when: certbot_install_method == 'snap'
+
+- name: Source - Check if certbot-dns-{{ certbot_dns_plugin }} plugin is installed.
+  command: certbot plugins | grep dns-{{ certbot_dns_plugin }}
+  register: cf_check
+  ignore_errors: true
+  changed_when: "cf_check is failed"
+  when: certbot_install_method == 'source'
+
+- name: Source - Install certbot-dns-{{ certbot_dns_plugin }}.
+  command: "cd {{ certbot_dir }}/certbot-dns-{{ certbot_dns_plugin }} && python setup.py install"
+  when: cf_check is failed
