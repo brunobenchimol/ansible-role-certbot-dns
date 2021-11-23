@@ -60,17 +60,18 @@ jobs:
           # - distro: centos7
           #   playbook: playbook-source-install.yml
           #   experimental: false
+          # Snap is not supported on Docker
+          # - distro: centos8
+          #   playbook: playbook-snap-install.yml
+          #   experimental: true
+          # - distro: debian11
+          #   playbook: playbook-snap-install.yml
+          #   experimental: true
           - distro: centos8
-            playbook: playbook-snap-install.yml
-            experimental: true
-          - distro: debian11
-            playbook: playbook-snap-install.yml
-            experimental: true
-          - distro: centos8
-            playbook: playbook-snap-install.yml
+            playbook: playbook-source-install.yml
             experimental: true
           - distro: ubuntu2004
-            playbook: playbook-snap-install.yml
+            playbook: playbook-source-install.yml
             experimental: true
 
     steps:
