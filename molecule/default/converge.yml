@@ -8,7 +8,7 @@
     certbot_auto_renew_user: root
     certbot_admin_email: test@brunobenchimol.ga
     certbot_auto_renew: true
-    certbot_auto_renew_user: "{{ ansible_user | default(lookup('env', 'USER')) }}"
+    # certbot_auto_renew_user: "{{ ansible_user | default(lookup('env', 'USER')) }}"
     certbot_auto_renew_hour: "5"
     certbot_auto_renew_minute: "{{ 59 |random(seed=inventory_hostname) }}"  # random number between 0-59
     certbot_auto_renew_options: "--quiet --no-self-upgrade"
