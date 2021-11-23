@@ -7,81 +7,195 @@ CLEANUP and write README
 --------- TODO: REMOVE _*.yml files they are not needed anymore
 
 
-Role Name
+Ansible Role: Cerbot DNS (for Let's Encrypt)  
 =========
 
-A brief description of the role goes here.
+Installs and configures Certbot (for Let's Encrypt) using DNS challenge and [DNS Plugins](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins).  
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role uses `geerlingguy.certbot` role so it inherits all recommendations and pre-requisites. Some recommendations follows:
+* Only use `source` installation from git if you're using an older OS release.  
+* Preferred method of installation is `snap` . Otherwise use `package` method.  
+* If you're using RedHat/CentOS you will require EPEL. Its recommended to use `geerlingguy.repo-epel` role before.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+The following table shows every new variable created that differs from `geerlingguy.certbot`:  
+
+|    Variable      |     Description     |
+| ---------------- | ------------------- |
+| `certbot_delete_certificate`      |  (true/`false`) Enable/Disable Certificate delete (using certbot delete). | 
+| `certbot_auto_renew`              |  If you set to `false` it will remove the cronjob if it was previously installed.  |
+| `certbot_create_reload_services`  | List of services to reload after each successfully issued certificate.  |
+| `certbot_dns_plugin`              | Certbot [DNS Plugin](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins) to use. There is no default. Mandatory. |
+| `certbot_dns_credentials_custom_file` | DNS Credentials File Path. Useful when using unsupported plugin by this role. |
+| `certbot_dns_*`                    | Options to choose depending on each plugin, refer to DNS Plugins Variables below. |
+
+
+## DNS Plugins
+
+Currently we support built-in methods for **certbot_dns_plugins**: `rfc2136`, `luadns`, `cloudflare` and `digitalocean`. Other plugins may be added in the future.     
+
+**Plugin**: `digitalocean`, `cloudflare` and `luadns`   
+|  Variable | Description |
+| --------- | ----------- |
+| `certbot_dns_api_email` | E-mail/Login to Access API |
+| `certbot_dns_api_token` | API Token/Credential |
+
+*Most DNS Providers require only an API token and does not require an email. Only fill required fields*
+
+**Plugin**: `rfc2136`   
+|  Variable | Description |
+| --------- | ----------- |
+| `certbot_dns_target_server` | Target DNS server (IPv4 or IPv6 address, not a hostname) |
+| `certbot_dns_target_server_port` | Target DNS port |
+| `certbot_dns_tsig_keyname` | TSIG key name |
+| `certbot_dns_key_secret` | TSIG key secret |
+| `certbot_dns_key_algorithm` | TSIG key algorithm |
+
+*Considering RFC2136 is the mostly used on BIND nameservers and will require effort on server side. Example is provided below but that's outside of scope of this document how to configure BIND.*
+
+## Sample Bind Configuration
+
+*Generate TSIG Key*
+```
+dnssec-keygen -a HMAC-SHA512 -b 512 -n HOST certbot.
+```
+
+*Sample BIND configuration (named.conf)*
+```
+key "certbot." {
+  algorithm hmac-sha512;
+  secret "4q4wM/2I180UXoMyN4INVhJNi8V9BCV+jMw2mXgZw/CSuxUT8C7NKKFs AmKd7ak51vWKgSl12ib86oQRPkpDjg==";
+};
+
+zone "example.com." IN {
+  type master;
+  file "named.example.com";
+  update-policy {
+    grant certbot. name _acme-challenge.example.com. txt;
+  };
+};
+```
+
+**Note**: This configuration limits the scope of the TSIG key to just be able to add and remove TXT records for one specific host for the purpose of completing the `dns-01` challenge. If your version of BIND doesn’t support the `update-policy` directive, then you can use the less-secure `allow-update` directive instead. [See the BIND documentation](https://bind9.readthedocs.io/en/latest/reference.html#dynamic-update-policies) for details.
+
+```
+zone "example.com." IN {
+  type master;
+  allow-update {
+    key certbot.;
+  };
+};
+```
+
+## Automatic Certificate Generation
+
+Currently only `dns` method is supported for generating new certificates using this role. If you need to use `standalone` or `webroot` you should use `geerlingguy.certbot` role instead.   
+
+```
+certbot_create_if_missing: false
+``` 
+Set `certbot_create_if_missing` to `true` to let this role generate certs.  
+
+```
+certbot_testmode: false
+``` 
+Enable test mode to only run a test request without actually creating certificates.  
+
+**Note**: This role defaults `certbot_testmode` to `false`. Using of Let's Encrypt [Staging Enviroment](https://letsencrypt.org/docs/staging-environment/) is recommended when setting DNS and Certbot for first time. If thats the case set `certbot_testmode` to `true`.  
+
+If you feel like to change how certbot run, just set `certbot_create_command` to suit your needs. You can virtually use any additional plugins (besides automatic installation) using `certbot_dns_credentials_custom_file` and `certbot_create_command`.  
+
+## Certbot Deploy Hook (Automatic Service Reload)
+
+Since `dns` mode does not require you to stop services like `standalone` mode, which runs it's own builtin server, you may safely reload a list of services to pickup the renewed certificate.    
+
+```
+certbot_create_reload_services:
+  - haproxy
+  # - nginx
+  # - apache
+  # - httpd
+```
+
+Considering HAProxy is a fairly common load balancer and it requires to use a single file which contains full chain, certificates and private key, this role will assemble this pem file automatically for you if `haproxy` is listed as a service. Which is very helpful considering certbot knows when its going to renew or not (benefits from --deploy-hook).   
+
+**Note**: It will only reload configured services after a sucessfully rewned (using --deploy-hook).   
+
+## Certificate Installation
+
+This role currently does not support or handles installating certificates on Apache, Ngnix, HAProxy or Third-party plugins supported by certbot.   
+
+## Wildcard Certificates
+
+This role fits perfectly for Wildcards since they require `dns-01` instead of the usual `http-01` challenge.
+
+*Sample wildcard*
+```
+- certbot_certs:
+    - domains:
+        - *.example.com
+```
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This role depends on [geerlingguy.certbot](https://galaxy.ansible.com/geerlingguy/certbot). Minimum Role Version 5.0.0.  
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+**For a complete example**: see the fully functional test playbook in molecule/default/placeholder.yml. *# PLACEHOLDER # TODO: PENDING test playbooks / molecule tests*
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+*Example Playbook*
+```
+---
+- hosts: webserver
+  become: true
+  gather_facts: true
+
+  vars:
+    certbot_install_method: snap
+    certbot_admin_email: test@brunobenchimol.ga
+    certbot_auto_renew: true
+    certbot_auto_renew_user: "{{ ansible_user | default(lookup('env', 'USER')) }}"
+    certbot_auto_renew_hour: "5"
+    certbot_auto_renew_minute: "{{ 59 |random(seed=inventory_hostname) }}"  # random number between 0-59
+    certbot_auto_renew_options: "--quiet --no-self-upgrade"
+    certbot_create_reload_services:
+      - haproxy
+    certbot_create_if_missing: true
+    certbot_delete_certificate: false
+    certbot_certs:
+      - domains:
+          - www.brunobenchimol.ga
+          - certbotdnstest.brunobenchimol.ga
+    certbot_testmode: false
+    certbot_dns_plugin: luadns
+    certbot_dns_api_token: "amclj31490idaslmklmoii09dh1"
+    certbot_dns_api_email: "test@brunobenchimol.ga"
+
+  roles
+   - brunobenchimol.certbot_dns
+```
 
 License
 -------
 
-BSD
+MIT / BSD
+
+References
+----------
+
+1. https://galaxy.ansible.com/geerlingguy/certbot
+2. https://galaxy.ansible.com/michaelpporter/certbot_cloudflare
+3. https://eff-certbot.readthedocs.io/en/stable/using.html
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
-
-
-
-      vars:
-        - certbot_install_method: snap
-        # - certbot_install_method: package
-        - certbot_admin_email: test@brunobenchimol.ga
-        - certbot_auto_renew: true
-        - certbot_auto_renew_user: "{{ ansible_user | default(lookup('env', 'USER')) }}"
-        - certbot_auto_renew_hour: "5"
-        - certbot_auto_renew_minute: "{{ 59 |random(seed=inventory_hostname) }}"  # random number between 0-59
-        - certbot_auto_renew_options: "--quiet --no-self-upgrade"
-        - certbot_create_reload_services:
-            - haproxy
-        - certbot_create_if_missing: true
-        # - certbot_delete_certificate: true
-        - certbot_delete_certificate: false
-        - certbot_certs:
-            - domains:
-                - www.domain.com
-                - certbotdnstest.domain.com
-        - certbot_use_staging_server: true
-        - certbot_dns_plugin: luadns
-        - certbot_dns_api_token: "tokenkey"
-        - certbot_dns_api_email: "email@example.com"
-
-certbot_dns_plugin
-
-        - certbot_dns_plugin: rfc2136
-        - certbot_dns_target_server: 177.74.3.220
-        - certbot_dns_target_server_port: 53
-        - certbot_dns_tsig_keyname: "certbot-sha256."
-        - certbot_dns_key_secret: "xwOGjKnek3ec15X3pEsFF9Y7or8p3u1bO0FyrXw49TU="
-        - certbot_dns_key_algorithm: "HMAC-SHA256"
-
-
-References:
-
-https://galaxy.ansible.com/geerlingguy/certbot
-https://galaxy.ansible.com/michaelpporter/certbot_cloudflare
+This role was created in 2021 by [Bruno Benchimol](https://www.linkedin.com/in/brunobenchimol/).     
