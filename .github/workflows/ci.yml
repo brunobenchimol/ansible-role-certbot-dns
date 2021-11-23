@@ -66,6 +66,12 @@ jobs:
           - distro: debian11
             playbook: playbook-snap-install.yml
             experimental: true
+          - distro: centos8
+            playbook: playbook-snap-install.yml
+            experimental: true
+          - distro: ubuntu2004
+            playbook: playbook-snap-install.yml
+            experimental: true
 
     steps:
       - name: Check out the codebase.
