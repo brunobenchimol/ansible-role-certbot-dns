@@ -92,3 +92,5 @@ jobs:
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRO: ${{ matrix.distro }}
           MOLECULE_PLAYBOOK: ${{ matrix.playbook }}
+          CERTBOT_DNS_API_TOKEN: ${{ secrets.CERTBOT_DNS_API_TOKEN }}
+          CERTBOT_DNS_API_EMAIL: ${{ secrets.CERTBOT_DNS_API_EMAIL }}

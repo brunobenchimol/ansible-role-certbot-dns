@@ -22,8 +22,8 @@
           - certbotdnstest.brunobenchimol.ga
     certbot_testmode: true
     certbot_dns_plugin: luadns
-    certbot_dns_api_token: ${{ secrets.CERTBOT_DNS_API_TOKEN }}
-    certbot_dns_api_email: ${{ secrets.CERTBOT_DNS_API_EMAIL }}
+    certbot_dns_api_token: "{{ lookup('env', 'CERTBOT_DNS_API_TOKEN') }}"
+    certbot_dns_api_email: "{{ lookup('env', 'CERTBOT_DNS_API_EMAIL') }}"
 
   pre_tasks:
     - name: Update apt cache.
