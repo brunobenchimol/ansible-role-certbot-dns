@@ -170,7 +170,7 @@ Example Playbook
     certbot_dns_api_token: "amclj31490idaslmklmoii09dh1"
     certbot_dns_api_email: "test@brunobenchimol.ga"
 
-  roles
+  roles:
    - brunobenchimol.certbot_dns
 ```
 
