@@ -1,0 +1,4 @@
+---
+- src: geerlingguy.git
+- src: geerlingguy.nginx
+- src: geerlingguy.certbot

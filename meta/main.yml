@@ -10,8 +10,8 @@ dependencies:
       certbot_create_command: "echo role dependency - needed to not crash on 1st execution without dns plugins"
 
 galaxy_info:
-  role_name: certbot-dns
-  author: Bruno Benchimol
+  role_name: certbot_dns
+  author: brunobenchimol
   description: "Installs and configures Certbot With DNS Challenge (for Lets Encrypt)."
   license: MIT
 
