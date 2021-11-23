@@ -46,9 +46,9 @@ jobs:
           # - distro: centos8
           #  playbook: converge.yml
           #  experimental: false
-          # - distro: centos7
-          #  playbook: converge.yml
-          #  experimental: false
+          - distro: centos7
+            playbook: converge.yml
+            experimental: false
           # - distro: ubuntu1804
           #  playbook: converge.yml
           #  experimental: false
