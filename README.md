@@ -26,7 +26,7 @@ The following table shows every new variable created that differs from `geerling
 | `certbot_dns_*`                    | Options to choose depending on each plugin, refer to DNS Plugins Variables below. |
 
 
-## DNS Plugins
+### DNS Plugins
 
 Currently we support built-in methods for **certbot_dns_plugins**: `rfc2136`, `luadns`, `cloudflare` and `digitalocean`. Other plugins may be added in the future.     
 
@@ -49,7 +49,7 @@ Currently we support built-in methods for **certbot_dns_plugins**: `rfc2136`, `l
 
 *Considering RFC2136 is the mostly used on BIND nameservers and will require effort on server side. Example is provided below but that's outside of scope of this document how to configure BIND.*
 
-## Sample Bind Configuration
+### Sample Bind Configuration
 
 *Generate TSIG Key*
 ```
@@ -83,7 +83,7 @@ zone "example.com." IN {
 };
 ```
 
-## Automatic Certificate Generation
+### Automatic Certificate Generation
 
 Currently only `dns` method is supported for generating new certificates using this role. If you need to use `standalone` or `webroot` you should use `geerlingguy.certbot` role instead.   
 
@@ -101,7 +101,7 @@ Enable test mode to only run a test request without actually creating certificat
 
 If you feel like to change how certbot run, just set `certbot_create_command` to suit your needs. You can virtually use any additional plugins (besides automatic installation) using `certbot_dns_credentials_custom_file` and `certbot_create_command`.  
 
-## Certbot Deploy Hook (Automatic Service Reload)
+### Certbot Deploy Hook (Automatic Service Reload)
 
 Since `dns` mode does not require you to stop services like `standalone` mode, which runs it's own builtin server, you may safely reload a list of services to pickup the renewed certificate.    
 
@@ -117,11 +117,11 @@ Considering HAProxy is a fairly common load balancer and it requires to use a si
 
 **Note**: It will only reload configured services after a sucessfully rewned (using --deploy-hook).   
 
-## Certificate Installation
+### Certificate Installation
 
 This role currently does not support or handles installating certificates on Apache, Ngnix, HAProxy or Third-party plugins supported by certbot.   
 
-## Wildcard Certificates
+### Wildcard Certificates
 
 This role fits perfectly for Wildcards since they require `dns-01` instead of the usual `http-01` challenge.
 
