@@ -1,21 +1,9 @@
 ---
-# TODO: FIX package naming issue: Debian/CentOS 8+ = python3-* ; CentOS 7 = python-*
 - name: Package - Install DNS Plugin - {{ certbot_dns_plugin }}.
   package:
-    name: "python3-certbot-dns-{{ certbot_dns_plugin }}"
+    name: "python{{ ansible_python.version.major }}-certbot-dns-{{ certbot_dns_plugin }}"
     state: present
-  when:
-    - certbot_install_method == 'package'
-    - not (ansible_distribution_major_version == 7 and ansible_os_family == 'RedHat')
-
-- name: Package - Install DNS Plugin - {{ certbot_dns_plugin }} - CentOS/RHEL 7.
-  package:
-    name: "python-certbot-dns-{{ certbot_dns_plugin }}"
-    state: present
-  when:
-    - certbot_install_method == 'package'
-    - ansible_distribution_major_version == 7
-    - ansible_os_family == 'RedHat'
+  when: certbot_install_method == 'package'
 
 - name: Snap - Make sure certbot Trust Plugins With Root is set.
   command: snap set certbot trust-plugin-with-root=ok
