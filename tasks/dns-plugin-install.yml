@@ -1,9 +1,21 @@
 ---
 - name: Package - Install DNS Plugin - {{ certbot_dns_plugin }}.
   package:
+    name: "python3-certbot-dns-{{ certbot_dns_plugin }}"
+    state: present
+  when:
+    - certbot_install_method == 'package'
+    - not ansible_distribution_major_version == 7
+    - not (ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat')
+
+- name: Package - Install DNS Plugin - {{ certbot_dns_plugin }}.
+  package:
     name: "python-certbot-dns-{{ certbot_dns_plugin }}"
     state: present
-  when: certbot_install_method == 'package'
+  when:
+    - certbot_install_method == 'package'
+    - ansible_distribution_major_version == 7
+    - ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
 
 - name: Snap - Make sure certbot Trust Plugins With Root is set.
   command: snap set certbot trust-plugin-with-root=ok
