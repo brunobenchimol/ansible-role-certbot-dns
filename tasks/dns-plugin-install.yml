@@ -12,7 +12,6 @@
 - name: Snap - Install DNS Plugin - {{ certbot_dns_plugin }}.
   snap:
     name: "certbot-dns-{{ certbot_dns_plugin }}"
-    classic: true
   when: certbot_install_method == 'snap'
 
 - name: Source - Check if certbot-dns-{{ certbot_dns_plugin }} plugin is installed.
