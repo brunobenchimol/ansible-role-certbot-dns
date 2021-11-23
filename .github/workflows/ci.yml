@@ -52,7 +52,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install ansible-lint
+        run: pip3 install ansible ansible-lint
 
       - name: Lint code.
         run: |
@@ -69,7 +69,7 @@ jobs:
           - distro: centos7
             playbook: converge.yml
             experimental: false
-            
+
           # Debian does not have certbot-dns-luadns plugin when 'package' install
           # - distro: ubuntu1804
           #   playbook: converge.yml
