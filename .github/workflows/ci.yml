@@ -43,12 +43,13 @@ jobs:
     strategy:
       matrix:
         include:
-          # - distro: centos8
-          #  playbook: converge.yml
-          #  experimental: false
+          - distro: centos8
+            playbook: converge.yml
+            experimental: false
           - distro: centos7
             playbook: converge.yml
             experimental: false
+          # Debian does not have certbot-dns-luadns plugin when 'package' install
           # - distro: ubuntu1804
           #  playbook: converge.yml
           #  experimental: false
@@ -60,15 +61,11 @@ jobs:
           #   playbook: playbook-source-install.yml
           #   experimental: false
           - distro: centos8
-            playbook: converge.yml
-            experimental: false
-
-          # - distro: centos7
-          #  playbook: playbook-snap-install.yml
-          #  experimental: true
-          # - distro: centos8
-          #  playbook: playbook-snap-install.yml
-          #  experimental: true
+            playbook: playbook-snap-install.yml
+            experimental: true
+          - distro: debian11
+            playbook: playbook-snap-install.yml
+            experimental: true
 
     steps:
       - name: Check out the codebase.
