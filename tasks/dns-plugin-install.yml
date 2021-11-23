@@ -1,7 +1,7 @@
 ---
 - name: Package - Install DNS Plugin - {{ certbot_dns_plugin }}.
   package:
-    name: "python3-certbot-dns-{{ certbot_dns_plugin }}"
+    name: "python-certbot-dns-{{ certbot_dns_plugin }}"
     state: present
   when: certbot_install_method == 'package'
 
