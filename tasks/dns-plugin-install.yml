@@ -1,11 +1,12 @@
 ---
+# TODO: FIX package naming issue: Debian/CentOS 8+ = python3-* ; CentOS 7 = python-*
 - name: Package - Install DNS Plugin - {{ certbot_dns_plugin }}.
   package:
     name: "python3-certbot-dns-{{ certbot_dns_plugin }}"
     state: present
   when:
     - certbot_install_method == 'package'
-    - not ansible_distribution_major_version == 7
+    - not (ansible_distribution_major_version == 7 and ansible_os_family == 'RedHat')
 
 - name: Package - Install DNS Plugin - {{ certbot_dns_plugin }} - CentOS/RHEL 7.
   package:
