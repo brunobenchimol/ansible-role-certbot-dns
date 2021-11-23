@@ -1,9 +1,9 @@
 ---
 # Certbot auto-renew cron job configuration (for certificate renewals)
 certbot_auto_renew: false
-# Enable to use staging server instead of production (useful for testing)
-certbot_use_staging_server: true
-# Enable delete certificates prior generating
+# Enable/Disable to use staging server instead of production (useful for testing)
+certbot_testmode: false
+# Enable/Disable delete certificates prior generating
 certbot_delete_certificate: false
 # Parameters used when creating new Certbot certs.
 certbot_create_if_missing: false
@@ -21,10 +21,9 @@ certbot_create_if_missing: false
 # certbot_dns_key_algorithm: "HMAC-MD5"
 
 # Others API (email and/or token) - cloudflare, luadns, digitalocean, etc
-# certbot_dns_plugin: luadns
+certbot_dns_plugin: luadns
 certbot_dns_api_email: user@example.com
 certbot_dns_api_token: 31209dMAsdasijFkok312hiqdkp
-
 # certbot_dns_credentials_custom_file: <file-path> # use when plugin is not directly supported by this role
 
 
@@ -41,3 +40,22 @@ certbot_create_reload_services:
   - haproxy
   # - nginx
   # - apache
+
+certbot_create_command: >-
+  {{ certbot_script }} certonly
+  {{ '--hsts' if certbot_hsts else '' }}
+  {{ '--test-cert' if certbot_testmode else '' }}
+  --noninteractive --agree-tos
+  --dns-{{ certbot_dns_plugin }} --dns-{{ certbot_dns_plugin }}-credentials {{ certbot_dns_credentials_file }}
+  --email {{ cert_item.email | default(certbot_admin_email) }}
+  -d {{ cert_item.domains | join(',') }}
+  {{ '--deploy-hook /etc/letsencrypt/renewal-hooks/deploy/reload_services.sh'
+    if certbot_create_reload_services
+  else '' }}
+
+certbot_delete_command: >-
+  {{ certbot_script }} delete --noninteractive
+  --cert-name {{ cert_item.domains | first | replace('*.', '') }}
+
+# Where to put Certbot when installing from source.
+certbot_dir: /opt/certbot
