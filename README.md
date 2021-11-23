@@ -1,16 +1,7 @@
-# ansible-role-certbot-dns
-Ansible Role - Certbot with DNS challenge
-
-
-CLEANUP and write README
-
---------- TODO: REMOVE _*.yml files they are not needed anymore
-
-
 Ansible Role: Cerbot DNS (for Let's Encrypt)  
 =========
 
-Installs and configures Certbot (for Let's Encrypt) using DNS challenge and [DNS Plugins](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins).  
+Installs and configures Certbot (for Let's Encrypt) using DNS challenge using [DNS Plugins](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins).  
 
 Requirements
 ------------
