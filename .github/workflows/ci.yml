@@ -63,10 +63,19 @@ jobs:
     strategy:
       matrix:
         include:
+          - distro: centos7
+            playbook: converge.yml
+            experimental: false
           - distro: centos8
             playbook: converge.yml
             experimental: false
-          - distro: centos7
+          - distro: ubuntu2004
+            playbook: converge.yml
+            experimental: false
+          - distro: debian10
+            playbook: converge.yml
+            experimental: false
+          - distro: debian11
             playbook: converge.yml
             experimental: false
 

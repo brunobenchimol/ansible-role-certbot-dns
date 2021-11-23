@@ -14,15 +14,16 @@
     certbot_auto_renew_options: "--quiet --no-self-upgrade"
     certbot_create_reload_services:
       - haproxy
-    #certbot_create_if_missing: true
+    # certbot_create_if_missing: true
     certbot_create_if_missing: "{{ 'false' if ansible_os_family == 'Debian' else 'true' }}"
     certbot_delete_certificate: false
     certbot_certs:
       - domains:
           - www.brunobenchimol.ga
           - certbotdnstest.brunobenchimol.ga
-    certbot_testmode: true
-    #certbot_dns_plugin: luadns
+    certbot_testmode: true  # do not disturb Lets Encrypt Production when testing role
+    # certbot_dns_plugin: luadns
+    # Debian does not have certbot-dns-luadns plugin when 'package' install - so we do not generate certs
     certbot_dns_plugin: "{{ 'rfc2136' if ansible_os_family == 'Debian' else 'luadns' }}"
     certbot_dns_api_token: "{{ lookup('env', 'CERTBOT_DNS_API_TOKEN') }}"
     certbot_dns_api_email: "{{ lookup('env', 'CERTBOT_DNS_API_EMAIL') }}"
