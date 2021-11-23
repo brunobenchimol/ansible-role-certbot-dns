@@ -46,9 +46,9 @@ jobs:
           # - distro: centos8
           #  playbook: converge.yml
           #  experimental: false
-          # - distro: centos7
-          #  playbook: converge.yml
-          #  experimental: false
+          - distro: centos7
+            playbook: converge.yml
+            experimental: false
           # - distro: ubuntu1804
           #  playbook: converge.yml
           #  experimental: false
@@ -63,9 +63,9 @@ jobs:
           # - distro: centos7
           #  playbook: playbook-snap-install.yml
           #  experimental: true
-          - distro: centos8
-            playbook: playbook-snap-install.yml
-            experimental: true
+          # - distro: centos8
+          #  playbook: playbook-snap-install.yml
+          #  experimental: true
 
     steps:
       - name: Check out the codebase.
