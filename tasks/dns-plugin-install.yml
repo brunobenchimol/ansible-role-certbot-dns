@@ -5,6 +5,7 @@
     state: present
   when:
     - certbot_install_method == 'package'
+    - not ansible_distribution_major_version == 7
 
 - name: Package - Install DNS Plugin - {{ certbot_dns_plugin }} - CentOS/RHEL 7.
   package:
