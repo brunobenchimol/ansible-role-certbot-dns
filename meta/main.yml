@@ -24,13 +24,17 @@ galaxy_info:
         - 8
     - name: Fedora
       versions:
-        - all
+        - 32
+        - 34
+        - 35
     - name: Ubuntu
       versions:
-        - all
+        - focal
+        - bionic
     - name: Debian
       versions:
-        - all
+        - buster
+        - bullseye
 
   galaxy_tags:
     - networking

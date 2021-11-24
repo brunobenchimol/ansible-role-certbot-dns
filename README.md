@@ -1,6 +1,6 @@
 Ansible Role: Cerbot DNS (for Let's Encrypt)  
 =========
-
+[![CI](https://github.com/brunobenchimol/ansible-role-certbot-dns/actions/workflows/ci.yml/badge.svg)](https://github.com/brunobenchimol/ansible-role-certbot-dns/actions/workflows/ci.yml)
 Installs and configures Certbot (for Let's Encrypt) using DNS challenge using [DNS Plugins](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins).  
 
 Requirements
@@ -140,18 +140,18 @@ This role depends on [geerlingguy.certbot](https://galaxy.ansible.com/geerlinggu
 Example Playbook
 ----------------
 
-**For a complete example**: see the fully functional test playbook in molecule/default/placeholder.yml. *# PLACEHOLDER # TODO: PENDING test playbooks / molecule tests*
+**For a complete example**: see the fully functional test playbook in molecule/default/playbook-snap-haproxy-rhel8.yml(https://github.com/brunobenchimol/ansible-role-certbot-dns/blob/main/molecule/default/playbook-snap-haproxy-rhel8.yml).  
 
 *Example Playbook*
 ```
 ---
-- hosts: webserver
+- hosts: haproxy
   become: true
   gather_facts: true
 
   vars:
     certbot_install_method: snap
-    certbot_admin_email: test@brunobenchimol.ga
+    certbot_admin_email: admin@example.com
     certbot_auto_renew: true
     certbot_auto_renew_user: "{{ ansible_user | default(lookup('env', 'USER')) }}"
     certbot_auto_renew_hour: "5"
@@ -163,16 +163,25 @@ Example Playbook
     certbot_delete_certificate: false
     certbot_certs:
       - domains:
-          - www.brunobenchimol.ga
-          - certbotdnstest.brunobenchimol.ga
+          - www.example.com
+          - certbotdnstest.example.com
     certbot_testmode: false
     certbot_dns_plugin: luadns
-    certbot_dns_api_token: "amclj31490idaslmklmoii09dh1"
-    certbot_dns_api_email: "test@brunobenchimol.ga"
+    certbot_dns_api_token: "<TOKEN>"
+    certbot_dns_api_email: "<TOKEN_EMAIL>"
 
   roles:
    - brunobenchimol.certbot_dns
 ```
+
+Automatic Testing (Ansible Molecule)
+------------------------------------
+
+Tests are done with 'package' installation method. Snap is currently *unsupported* to run on docker (at least all testing failed when installing certbot from snapd). Source usually fails on modern OS. Its too dificult to use DNS plugins on older OS because they lack DNS plugins when using Package Management tools.    
+
+Snap installation method was tested on a VM running RHEL 8.  
+
+**Note**: Slightly modified version from [geerlingguy.certbot](https://galaxy.ansible.com/geerlingguy/certbot).  
 
 License
 -------
