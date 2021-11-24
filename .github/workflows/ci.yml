@@ -98,6 +98,11 @@ jobs:
           #   playbook: converge-snap.yml
           #   experimental: true
 
+          # enable if you want test with production CA
+          # - distro: centos8
+          #  playbook: converge-issue-certificate.yml
+          #  experimental: false
+
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v2
