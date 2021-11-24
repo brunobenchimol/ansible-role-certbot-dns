@@ -28,7 +28,11 @@
     # Debian does not have certbot-dns-luadns plugin when 'package' install - so we do not generate certs
     certbot_dns_plugin: "{{ 'rfc2136' if ansible_os_family == 'Debian' else 'luadns' }}"
     # if we do not have rfc2136 variables set the playbook will fail
-    
+    certbot_dns_target_server: 127.0.0.1
+    certbot_dns_target_server_port: 53
+    certbot_dns_tsig_keyname: "certbot."
+    certbot_dns_key_secret: "xwOGjKnek3ec15X4q4wM/2I180UXoMyN4INVhJNi8V9BCV+jMw2mXgZw/CSuxUT8C7NKKFs AmKd7ak51vWKgSl12ib86oQRPkpDjg==3pEsFF9Y7or8p3u1bO0FyrXw49TU="
+    certbot_dns_key_algorithm: "HMAC-SHA512"
 
 
   pre_tasks:
