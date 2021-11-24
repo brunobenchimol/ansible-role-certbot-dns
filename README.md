@@ -1,6 +1,7 @@
 Ansible Role: Cerbot DNS (for Let's Encrypt)  
 =========
-[![CI](https://github.com/brunobenchimol/ansible-role-certbot-dns/actions/workflows/ci.yml/badge.svg)](https://github.com/brunobenchimol/ansible-role-certbot-dns/actions/workflows/ci.yml)    
+[![CI](https://github.com/brunobenchimol/ansible-role-certbot-dns/actions/workflows/ci.yml/badge.svg)](https://github.com/brunobenchimol/ansible-role-certbot-dns/actions/workflows/ci.yml)
+[![Release](https://github.com/brunobenchimol/ansible-role-certbot-dns/actions/workflows/release.yml/badge.svg)](https://github.com/brunobenchimol/ansible-role-certbot-dns/actions/workflows/release.yml)    
 
 Installs and configures Certbot (for Let's Encrypt) using DNS challenge and [DNS Plugins](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins).  
 
