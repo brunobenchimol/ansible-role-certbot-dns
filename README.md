@@ -142,7 +142,7 @@ This role depends on [geerlingguy.certbot](https://galaxy.ansible.com/geerlinggu
 Example Playbook
 ----------------
 
-**For a complete example**: see the fully functional test playbook in molecule/default/playbook-snap-haproxy-rhel8.yml(https://github.com/brunobenchimol/ansible-role-certbot-dns/blob/main/molecule/default/playbook-snap-haproxy-rhel8.yml).  
+**For a complete example**: see the fully functional test playbook in [molecule/default/playbook-snap-haproxy-rhel8.yml](https://github.com/brunobenchimol/ansible-role-certbot-dns/blob/main/molecule/default/playbook-snap-haproxy-rhel8.yml).  
 
 *Example Playbook*
 ```
