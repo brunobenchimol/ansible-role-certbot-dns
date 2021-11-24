@@ -23,10 +23,13 @@
           - certbotdnstest.brunobenchimol.ga
     certbot_testmode: true  # do not disturb Lets Encrypt Production when testing role
     # certbot_dns_plugin: luadns
-    # Debian does not have certbot-dns-luadns plugin when 'package' install - so we do not generate certs
-    certbot_dns_plugin: "{{ 'rfc2136' if ansible_os_family == 'Debian' else 'luadns' }}"
     certbot_dns_api_token: "{{ lookup('env', 'CERTBOT_DNS_API_TOKEN') }}"
     certbot_dns_api_email: "{{ lookup('env', 'CERTBOT_DNS_API_EMAIL') }}"
+    # Debian does not have certbot-dns-luadns plugin when 'package' install - so we do not generate certs
+    certbot_dns_plugin: "{{ 'rfc2136' if ansible_os_family == 'Debian' else 'luadns' }}"
+    # if we do not have rfc2136 variables set the playbook will fail
+    
+
 
   pre_tasks:
     - name: Update apt cache.

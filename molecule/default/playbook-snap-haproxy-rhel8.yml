@@ -1,0 +1,66 @@
+---
+- hosts: haproxy_test
+  become: true
+  gather_facts: true
+
+  tasks:
+
+    - name: Configure Firewalld to allow HTTP
+      firewalld:
+        zone: public
+        service: http
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Configure Firewalld to allow HTTPS
+      firewalld:
+        zone: public
+        service: https
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Install EPEL
+      import_role:
+        name: geerlingguy.repo-epel
+
+    - name: Install haproxy
+      yum:
+        name: haproxy
+        state: present
+
+    - name: Make sure haproxy is running
+      systemd:
+        state: started
+        name: haproxy
+        enabled: yes
+    - name: Enable service haproxy and ensure it is not masked
+      systemd:
+        name: haproxy
+        enabled: yes
+        masked: no
+
+    - name: Configure Certbot
+      import_role:
+        name: brunobenchimol.certbot_dns
+      vars:
+        - certbot_install_method: snap
+        - certbot_admin_email: admin@example.com
+        - certbot_auto_renew: true
+        - certbot_auto_renew_user: "{{ ansible_user | default(lookup('env', 'USER')) }}"
+        - certbot_auto_renew_hour: "5"
+        - certbot_auto_renew_minute: "{{ 59 |random(seed=inventory_hostname) }}"  # random number between 0-59
+        - certbot_auto_renew_options: "--quiet --no-self-upgrade"
+        - certbot_create_reload_services:
+            - haproxy
+        - certbot_create_if_missing: true
+        - certbot_delete_certificate: false
+        - certbot_certs:
+            - domains:
+                - www.example.com
+                - certbotdnstest.example.com
+        - certbot_testmode: true
+        - certbot_dns_plugin: luadns
+        - certbot_dns_api_token: "MY_TOKEN"
+        - certbot_dns_api_email: "MY_EMAIL"

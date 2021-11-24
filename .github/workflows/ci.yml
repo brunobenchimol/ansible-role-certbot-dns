@@ -79,30 +79,23 @@ jobs:
             playbook: converge.yml
             experimental: false
 
-          # Debian does not have certbot-dns-luadns plugin when 'package' install
-          # - distro: ubuntu1804
-          #   playbook: converge.yml
-          #   experimental: false
-          # - distro: debian10
-          #   playbook: converge.yml
-          #   experimental: false
-
           # Source install started failing recently.
           # - distro: centos7
-          #   playbook: playbook-source-install.yml
+          #   playbook: converge-source.yml
           #   experimental: false
           # - distro: centos8
-          #   playbook: playbook-source-install.yml
+          #   playbook: converge-source.yml
           #   experimental: true
           # - distro: ubuntu2004
-          #   playbook: playbook-source-install.yml
+          #   playbook: converge-source.yml
           #   experimental: true
+
           # Snap is not supported on Docker
           # - distro: centos8
-          #   playbook: playbook-snap-install.yml
+          #   playbook: converge-snap.yml
           #   experimental: true
           # - distro: debian11
-          #   playbook: playbook-snap-install.yml
+          #   playbook: converge-snap.yml
           #   experimental: true
 
     steps:
