@@ -8,7 +8,7 @@
 - name: Snap - Make sure certbot Trust Plugins With Root is set.
   command: snap set certbot trust-plugin-with-root=ok
   register: snap_set_plugin_trust_root
-  changed_when: "snap_set_plugin_trust_root.rc is failed"
+  changed_when: "snap_set_plugin_trust_root is failed"
   when: certbot_install_method == 'snap'
 
 - name: Snap - Install DNS Plugin - {{ certbot_dns_plugin }}.
