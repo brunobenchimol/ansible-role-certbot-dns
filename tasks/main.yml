@@ -16,8 +16,6 @@
 - name: Certbot Create Certificates.
   import_role:
     name: geerlingguy.certbot
-  vars:
-    certbot_install_method: "do-not-install-again"
   when:
     - certbot_create_if_missing
 
