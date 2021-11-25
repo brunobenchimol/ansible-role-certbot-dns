@@ -24,9 +24,10 @@
     - name: Install EPEL
       import_role:
         name: geerlingguy.repo-epel
+      when: ansible_os_family == 'RedHat'
 
     - name: Install haproxy
-      yum:
+      package:
         name: haproxy
         state: present
 
@@ -55,7 +56,7 @@
         - certbot_create_reload_services:
             - haproxy
         - certbot_create_if_missing: true
-        - certbot_delete_certificate: false
+        - certbot_delete_certs: false
         - certbot_certs:
             - domains:
                 - www.example.com

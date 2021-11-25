@@ -4,7 +4,7 @@
   become: true
 
   vars:
-    certbot_install_method: 'package'  # docker does not support snapd
+    certbot_install_method: 'package'  # snapd does not currently supported in docker
     certbot_auto_renew_user: root
     certbot_admin_email: test@brunobenchimol.ga
     certbot_auto_renew: true
@@ -14,7 +14,7 @@
     certbot_create_reload_services:
       - haproxy
     certbot_create_if_missing: true
-    certbot_delete_certificate: false
+    certbot_delete_certs: false
     certbot_certs:
       - domains:
           - www.brunobenchimol.ga

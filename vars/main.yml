@@ -5,3 +5,20 @@ certbot_supported_dns_plugins:
  - cloudflare
  - digitalocean
  - luadns
+# disable stop/start standalone mode - use reload_services
+certbot_create_standalone_stop_services: []
+certbot_create_command: >-
+  {{ certbot_script }} certonly
+  {{ '--hsts' if certbot_hsts else '' }}
+  {{ '--test-cert' if certbot_testmode else '' }}
+  --noninteractive --agree-tos
+  --dns-{{ certbot_dns_plugin }} --dns-{{ certbot_dns_plugin }}-credentials {{ certbot_dns_credentials_file }}
+  --email {{ cert_item.email | default(certbot_admin_email) }}
+  -d {{ cert_item.domains | join(',') }}
+  {{ '--deploy-hook /etc/letsencrypt/renewal-hooks/deploy/reload_services.sh'
+    if certbot_create_reload_services
+  else '' }}
+
+certbot_delete_command: >-
+  {{ certbot_script }} delete --noninteractive
+  --cert-name {{ cert_item.domains | first | replace('*.', '') }}

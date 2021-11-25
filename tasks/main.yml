@@ -5,16 +5,26 @@
 - import_tasks: prepare-certbot-for-dns.yml
   when: certbot_dns_plugin is defined
 
-- include_tasks: delete-cert.yml
+- name: Delete Certificates.
+  include_tasks: delete-cert.yml
   with_items: "{{ certbot_certs }}"
   when:
-    - certbot_delete_certificate|bool
+    - certbot_delete_certs|bool
   loop_control:
     loop_var: cert_item
 
 - name: Certbot Create Certificates.
   import_role:
     name: geerlingguy.certbot
+  vars:
+    certbot_install_method: "do-not-install-again"
   when:
     - certbot_create_if_missing
-    - not certbot_delete_certificate
+
+# Same cron name from: geerlingguy.certbot
+- name: Remove cron job for certbot renewal (if configured).
+  cron:
+    name: Certbot automatic renewal.
+    state: absent
+  when:
+    - not certbot_auto_renew

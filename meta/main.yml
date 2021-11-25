@@ -1,13 +1,12 @@
 ---
 dependencies:
   - role: geerlingguy.certbot
-    vars:   # wont override when calling role with variables
-      certbot_create_if_missing: false
-      certbot_auto_renew: false
-      certbot_create_standalone_stop_services: []
-      certbot_certs: []
-      # useful to deal with installation certbot and use role dependencies
-      certbot_create_command: "echo role dependency - needed to not crash on 1st execution without dns plugins"
+    certbot_create_if_missing: false
+    certbot_auto_renew: false
+    certbot_create_standalone_stop_services: []
+    certbot_create_method: "do-not-create"
+# Alternative Syntax
+# - { role: geerlingguy.certbot, certbot_create_if_missing: false, certbot_auto_renew: false, certbot_create_standalone_stop_services: [], certbot_create_method: "do-not-create" }
 
 galaxy_info:
   role_name: certbot_dns

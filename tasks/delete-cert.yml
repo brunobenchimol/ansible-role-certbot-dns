@@ -15,11 +15,3 @@
     state: absent
   when:
     - letsencrypt_cert.stat.exists
-
-# Same cron name from: geerlingguy.certbot
-- name: Remove cron job for certbot renewal (if configured).
-  cron:
-    name: Certbot automatic renewal.
-    state: absent
-  when:
-    - not certbot_auto_renew

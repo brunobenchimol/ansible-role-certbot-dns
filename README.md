@@ -20,7 +20,7 @@ The following table shows every new variable created that differs from `geerling
 
 |    Variable      |     Description     |
 | ---------------- | ------------------- |
-| `certbot_delete_certificate`      |  (true/`false`) Enable/Disable Certificate delete (using certbot delete). | 
+| `certbot_delete_certs`      |  (true/`false`) Enable/Disable Certificate delete (using certbot delete). | 
 | `certbot_auto_renew`              |  If you set to `false` it will remove the cronjob if it was previously installed.  |
 | `certbot_create_reload_services`  | List of services to reload after each successfully issued certificate.  |
 | `certbot_dns_plugin`              | Certbot [DNS Plugin](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins) to use. There is no default. Mandatory. |
@@ -162,7 +162,7 @@ Example Playbook
     certbot_create_reload_services:
       - haproxy
     certbot_create_if_missing: true
-    certbot_delete_certificate: false
+    certbot_delete_certs: false
     certbot_certs:
       - domains:
           - www.example.com
