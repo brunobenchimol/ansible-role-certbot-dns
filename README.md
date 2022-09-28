@@ -54,12 +54,14 @@ Currently we support built-in methods for **certbot_dns_plugins**: `rfc2136`, `l
 ### Sample Bind Configuration
 
 *Generate TSIG Key*
-```
+
+```Yaml
 dnssec-keygen -a HMAC-SHA512 -b 512 -n HOST certbot.
 ```
 
 *Sample BIND configuration (named.conf)*
-```
+
+```Yaml
 key "certbot." {
   algorithm hmac-sha512;
   secret "4q4wM/2I180UXoMyN4INVhJNi8V9BCV+jMw2mXgZw/CSuxUT8C7NKKFs AmKd7ak51vWKgSl12ib86oQRPkpDjg==";
@@ -76,7 +78,7 @@ zone "example.com." IN {
 
 **Note**: This configuration limits the scope of the TSIG key to just be able to add and remove TXT records for one specific host for the purpose of completing the `dns-01` challenge. If your version of BIND doesn’t support the `update-policy` directive, then you can use the less-secure `allow-update` directive instead. [See the BIND documentation](https://bind9.readthedocs.io/en/latest/reference.html#dynamic-update-policies) for details.
 
-```
+```Yaml
 zone "example.com." IN {
   type master;
   allow-update {
@@ -107,7 +109,7 @@ If you feel like to change how certbot run, just set `certbot_create_command` to
 
 Since `dns` mode does not require you to stop services like `standalone` mode, which runs it's own builtin server, you may safely reload a list of services to pickup the renewed certificate.    
 
-```
+```Yaml
 certbot_create_reload_services:
   - haproxy
   # - nginx
@@ -128,7 +130,8 @@ This role currently does not support or handles installating certificates on Apa
 This role fits perfectly for Wildcards since they require `dns-01` instead of the usual `http-01` challenge.
 
 *Sample wildcard*
-```
+
+```Yaml
 - certbot_certs:
     - domains:
         - *.example.com
@@ -145,7 +148,8 @@ Example Playbook
 **For a complete example**: see the fully functional test playbook in [molecule/default/playbook-snap-haproxy-rhel8.yml](https://github.com/brunobenchimol/ansible-role-certbot-dns/blob/main/molecule/default/playbook-snap-haproxy-rhel8.yml).  
 
 *Example Playbook*
-```
+
+```Yaml
 ---
 - hosts: haproxy
   become: true
@@ -174,6 +178,17 @@ Example Playbook
 
   roles:
    - brunobenchimol.certbot_dns
+```
+  
+*Sample Playbook using DNS RFC 2136*
+
+```Yaml
+    certbot_dns_plugin: rfc2136
+    certbot_dns_target_server: 192.168.0.1
+    certbot_dns_target_server_port: 53
+    certbot_dns_tsig_keyname: "certbot."
+    certbot_dns_key_secret: "4q4wM/2I180UXoMyN4INVhJNi8V9BCV+jMw2mXgZw/CSuxUT8C7NKKFs AmKd7ak51vWKgSl12ib86oQRPkpDjg=="
+    certbot_dns_key_algorithm: "HMAC-SHA512"
 ```
 
 Automatic Testing (Ansible Molecule)
