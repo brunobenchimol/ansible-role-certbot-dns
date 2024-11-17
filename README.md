@@ -24,6 +24,7 @@ The following table shows every new variable created that differs from `geerling
 | `certbot_auto_renew`              |  If you set to `false` it will remove the cronjob if it was previously installed.  |
 | `certbot_create_reload_services`  | List of services to reload after each successfully issued certificate.  |
 | `certbot_dns_plugin`              | Certbot [DNS Plugin](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins) to use. There is no default. Mandatory. |
+| `certbot_create_command_extra_options`   | Parameter list that will feed into certbot create command. You can pass any argument. Use at your own risk. |
 | `certbot_dns_credentials_custom_file` | DNS Credentials File Path. Useful when using unsupported plugin by this role. |
 | `certbot_dns_*`                    | Options to choose depending on each plugin, refer to DNS Plugins Variables below. |
 

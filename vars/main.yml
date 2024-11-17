@@ -18,6 +18,7 @@ certbot_create_command: >-
   {{ '--deploy-hook /etc/letsencrypt/renewal-hooks/deploy/reload_services.sh'
     if certbot_create_reload_services
   else '' }}
+  {{ certbot_create_command_extra_options }}
 
 certbot_delete_command: >-
   {{ certbot_script }} delete --noninteractive

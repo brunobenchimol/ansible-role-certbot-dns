@@ -13,3 +13,15 @@ rules:
     allowed-values: ['true', 'false', 'yes', 'no']
   braces:
     max-spaces-inside: 1
+  comments:
+    min-spaces-from-content: 1 # prettier compatibility
+  # We are adding an extra space inside braces as that's how prettier does it
+  # and we are trying not to fight other linters.
+  braces:
+    min-spaces-inside: 0 # yamllint defaults to 0
+    max-spaces-inside: 1 # yamllint defaults to 0
+  # key-duplicates:
+  #   forbid-duplicated-merge-keys: true # not enabled by default
+  octal-values:
+    forbid-implicit-octal: true # yamllint defaults to false
+    forbid-explicit-octal: true # yamllint defaults to false

@@ -29,7 +29,7 @@
 
 - name: Upload custom DNS Credentials file.
   copy:
-    src: "{{ certbot_dns_credentials_custom_file  }}"
+    src: "{{ certbot_dns_credentials_custom_file }}"
     dest: "{{ certbot_dns_credentials_file }}"
     state: file
     mode: 0600

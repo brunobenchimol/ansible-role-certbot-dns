@@ -44,3 +44,6 @@ certbot_create_reload_services: []  # remove brackets if adding services
 
 # Where to put Certbot when installing from source.
 certbot_dir: /opt/certbot
+
+# Certbot extra args
+certbot_create_command_extra_options: ""
