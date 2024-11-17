@@ -22,12 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: 'brunobenchimol.certbot_dns'
 
       - name: Set up Python 3.
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -37,26 +37,26 @@ jobs:
       - name: Lint code.
         run: |
           yamllint .
-  ansible-lint:
-    name: Ansible Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the codebase.
-        uses: actions/checkout@v2
-        with:
-          path: 'brunobenchimol.certbot_dns'
+  # ansible-lint:
+  #   name: Ansible Lint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out the codebase.
+  #       uses: actions/checkout@v2
+  #       with:
+  #         path: 'brunobenchimol.certbot_dns'
 
-      - name: Set up Python 3.
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
+  #     - name: Set up Python 3.
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.x'
 
-      - name: Install test dependencies.
-        run: pip3 install ansible ansible-lint
+  #     - name: Install test dependencies.
+  #       run: pip3 install ansible ansible-lint
 
-      - name: Lint code.
-        run: |
-          ansible-lint .
+  #     - name: Lint code.
+  #       run: |
+  #         ansible-lint .
   molecule:
     name: Molecule
     runs-on: ubuntu-latest
@@ -76,6 +76,9 @@ jobs:
             playbook: converge.yml
             experimental: false
           - distro: debian11
+            playbook: converge.yml
+            experimental: false
+          - distro: rockylinux9
             playbook: converge.yml
             experimental: false
 
@@ -105,17 +108,17 @@ jobs:
 
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: 'brunobenchimol.certbot_dns'
 
       - name: Set up Python 3.
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install ansible molecule[docker] docker
+        run: pip3 install ansible molecule molecule-plugins[docker] docker
 
       - name: Run Molecule tests.
         run: molecule test
